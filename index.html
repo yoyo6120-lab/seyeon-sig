@@ -1,8 +1,10 @@
-<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>과즙세연 시그 목록</title>
-    <script src="./과즙세연 시그 목록_files/crypto-js.min.js.다운로드"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         /* 1. 디자인 (CSS) */
         * {
@@ -247,15 +249,15 @@
 <body>
 
     <div class="admin-status-bar">
-        <button id="changePwBtn" class="admin-link-btn" onclick="changeAdminPassword()" style="display: none;">🔑 비밀번호 변경</button>
+        <button id="changePwBtn" class="admin-link-btn" onclick="changeAdminPassword()">🔑 비밀번호 변경</button>
         <button id="adminLoginBtn" class="admin-link-btn" onclick="toggleAdminMode()">🔒 관리자 모드 로그인</button>
     </div>
 
     <div class="banner-container">
-        <img src="./과즙세연 시그 목록_files/80466a1839bf0c26b.png" alt="과즙세연 시그 목록" class="banner-img">
+        <img src="https://stimg.sooplive.com/NORMAL_BBS/0/14909290/80466a1839bf0c26b.png" alt="과즙세연 시그 목록" class="banner-img">
     </div>
 
-    <div id="adminPanel" class="admin-panel" style="display: none;">
+    <div id="adminPanel" class="admin-panel">
         <h3>✨ 시그 및 항목 신규 추가</h3>
         <div class="form-group">
             <input type="number" id="formNum" class="form-input" style="width: 100px;" placeholder="개수(번호)">
@@ -279,12 +281,12 @@
 
     <div class="filter-section">
         <div class="filter-group" style="margin-bottom: 5px;">
-            <button class="filter-btn" data-type="all" onclick="filterData('all', null, this)">전체</button>
+            <button class="filter-btn active" data-type="all" onclick="filterData('all', null, this)">전체</button>
             <button class="filter-btn" data-type="hot" onclick="filterData('tag', 'hot', this)">HOT 🔥</button>
             <button class="filter-btn" data-type="new" onclick="filterData('tag', 'new', this)">NEW ✨</button>
             <button class="filter-btn" data-type="star" onclick="filterData('tag', 'star', this)">열혈 ⭐</button>
             <button class="filter-btn" data-type="bangsel" onclick="filterData('tag', 'bangsel', this)">방셀 📸</button>
-            <button class="filter-btn active" data-type="roulette" onclick="filterData('tag', 'roulette', this)">룰렛 🎰</button>
+            <button class="filter-btn" data-type="roulette" onclick="filterData('tag', 'roulette', this)">룰렛 🎰</button>
             <button class="filter-btn" data-type="etc" onclick="filterData('tag', 'etc', this)">기타 🎸</button>
         </div>
         <div class="filter-group">
@@ -303,14 +305,10 @@
                 <tr>
                     <th class="num-col">개수(번호)</th>
                     <th>내용</th>
-                    <th class="action-col" id="thAction" style="display: none;">원클릭 항목 관리</th>
+                    <th class="action-col" id="thAction">원클릭 항목 관리</th>
                 </tr>
             </thead>
-            <tbody id="sigTableBody"><tr>
-                    <td class="num-col" style="vertical-align: middle;">301</td>
-                    <td class="title-col" style="vertical-align: middle;">일반 시그 룰렛 <span class="badge badge-roulette">룰렛 🎰</span></td>
-                    
-                </tr></tbody>
+            <tbody id="sigTableBody"></tbody>
         </table>
     </div>
 
@@ -671,5 +669,5 @@
         document.getElementById('searchInput').addEventListener('input', applyFilters);
         applyFilters();
     </script>
-
-</body></html>
+</body>
+</html>
