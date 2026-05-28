@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>과즙세연 시그 목록</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="./과즙세연 시그 목록_files/crypto-js.min.js.다운로드"></script>
     <style>
         /* 1. 디자인 (CSS) */
         * {
@@ -249,15 +247,15 @@
 <body>
 
     <div class="admin-status-bar">
-        <button id="changePwBtn" class="admin-link-btn" onclick="changeAdminPassword()">🔑 비밀번호 변경</button>
+        <button id="changePwBtn" class="admin-link-btn" onclick="changeAdminPassword()" style="display: none;">🔑 비밀번호 변경</button>
         <button id="adminLoginBtn" class="admin-link-btn" onclick="toggleAdminMode()">🔒 관리자 모드 로그인</button>
     </div>
 
     <div class="banner-container">
-        <img src="https://stimg.sooplive.com/NORMAL_BBS/0/14909290/80466a1839bf0c26b.png" alt="과즙세연 시그 목록" class="banner-img">
+        <img src="./과즙세연 시그 목록_files/80466a1839bf0c26b.png" alt="과즙세연 시그 목록" class="banner-img">
     </div>
 
-    <div id="adminPanel" class="admin-panel">
+    <div id="adminPanel" class="admin-panel" style="display: none;">
         <h3>✨ 시그 및 항목 신규 추가</h3>
         <div class="form-group">
             <input type="number" id="formNum" class="form-input" style="width: 100px;" placeholder="개수(번호)">
@@ -281,12 +279,12 @@
 
     <div class="filter-section">
         <div class="filter-group" style="margin-bottom: 5px;">
-            <button class="filter-btn active" data-type="all" onclick="filterData('all', null, this)">전체</button>
+            <button class="filter-btn" data-type="all" onclick="filterData('all', null, this)">전체</button>
             <button class="filter-btn" data-type="hot" onclick="filterData('tag', 'hot', this)">HOT 🔥</button>
             <button class="filter-btn" data-type="new" onclick="filterData('tag', 'new', this)">NEW ✨</button>
             <button class="filter-btn" data-type="star" onclick="filterData('tag', 'star', this)">열혈 ⭐</button>
             <button class="filter-btn" data-type="bangsel" onclick="filterData('tag', 'bangsel', this)">방셀 📸</button>
-            <button class="filter-btn" data-type="roulette" onclick="filterData('tag', 'roulette', this)">룰렛 🎰</button>
+            <button class="filter-btn active" data-type="roulette" onclick="filterData('tag', 'roulette', this)">룰렛 🎰</button>
             <button class="filter-btn" data-type="etc" onclick="filterData('tag', 'etc', this)">기타 🎸</button>
         </div>
         <div class="filter-group">
@@ -305,10 +303,14 @@
                 <tr>
                     <th class="num-col">개수(번호)</th>
                     <th>내용</th>
-                    <th class="action-col" id="thAction">원클릭 항목 관리</th>
+                    <th class="action-col" id="thAction" style="display: none;">원클릭 항목 관리</th>
                 </tr>
             </thead>
-            <tbody id="sigTableBody"></tbody>
+            <tbody id="sigTableBody"><tr>
+                    <td class="num-col" style="vertical-align: middle;">301</td>
+                    <td class="title-col" style="vertical-align: middle;">일반 시그 룰렛 <span class="badge badge-roulette">룰렛 🎰</span></td>
+                    
+                </tr></tbody>
         </table>
     </div>
 
@@ -398,7 +400,6 @@
                     document.getElementById('adminLoginBtn').innerText = "🔓 관리자 로그아웃";
                     document.getElementById('changePwBtn').style.display = "inline-block";
                     document.getElementById('adminPanel').style.display = "block";
-                    document.getElementById('thAction').style.display = "table-cell";
                 } else {
                     alert("비밀번호가 일치하지 않습니다.");
                 }
@@ -408,7 +409,6 @@
                 document.getElementById('adminLoginBtn').innerText = "🔒 관리자 모드 로그인";
                 document.getElementById('changePwBtn').style.display = "none";
                 document.getElementById('adminPanel').style.display = "none";
-                document.getElementById('thAction').style.display = "none";
                 resetForm();
             }
             applyFilters();
@@ -636,43 +636,40 @@
             applyFilters();
         }
 
+        // 필터 및 실시간 통합 검색 엔진 (★꼬이던 예외처리 완전 제거 버전)
         function applyFilters() {
             const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
             let filtered = [...sigData];
 
-            // 1. 태그 및 조건 필터링 단계
+            // [1단계] 탭 버튼 필터링
             if (filterType === 'tag') {
                 filtered = filtered.filter(item => item.tags.includes(filterValue));
             } else if (filterType === 'range') {
-                // 범위 검색 필터에서도 '기타(etc)' 항목은 기본적으로 제외
-                filtered = filtered.filter(item => item.num >= filterValue[0] && item.num <= filterValue[1] && !item.tags.includes('etc'));
-            } else if (filterType === 'all') {
-                // [수정] '전체' 상태일 때는 '기타(etc)' 태그가 없는 항목만 추출
-                filtered = filtered.filter(item => !item.tags.includes('etc'));
+                filtered = filtered.filter(item => item.num >= filterValue[0] && item.num <= filterValue[1]);
             }
+            // filterType === 'all' 일 때는 조건 없이 원본 데이터를 모두 사용 (기타 제외 로직 삭제)
 
-            // 2. 통합 검색어 필터링 단계
+            // [2단계] 실시간 검색어 필터링
             if (searchText) {
-                // 현재 선택된 버튼이 '기타 🎸' 탭이 아니라면, 검색 결과에서도 '기타' 항목은 무조건 검색에서 노출되지 않도록 필터 추가
-                if (filterType !== 'tag' || filterValue !== 'etc') {
-                    filtered = filtered.filter(item => !item.tags.includes('etc'));
-                }
-                
                 filtered = filtered.filter(item => 
                     item.num.toString().includes(searchText) || 
                     item.title.toLowerCase().includes(searchText)
                 );
             }
 
-            // 3. 정렬 및 테이블 출력
+            // [3단계] 정렬 및 출력
             filtered.sort((a, b) => a.num - b.num);
             renderTable(filtered);
             
-            document.getElementById('thAction').style.display = isAdmin ? "table-cell" : "none";
+            // [에러 방지] thAction 요소가 있을 때만 style 변경되도록 예외 처리
+            const thAction = document.getElementById('thAction');
+            if (thAction) {
+                thAction.style.display = isAdmin ? "table-cell" : "none";
+            }
         }
 
         document.getElementById('searchInput').addEventListener('input', applyFilters);
         applyFilters();
-    </script> 
-</body>
-</html>
+    </script>
+
+</body></html>
